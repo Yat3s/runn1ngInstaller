@@ -1,6 +1,10 @@
 package com.yat3s.runn1nginstaller;
 
+import android.util.Log;
+
 import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Created by Yat3s on 2/27/16.
@@ -11,9 +15,18 @@ import java.io.DataOutputStream;
 public class CommandUtil {
     public static boolean execCommand(String cmd) {
         Process process = null;
+        OutputStream out = null;
+        InputStream in = null;
         try {
-            process = Runtime.getRuntime().exec(cmd);
+            process = Runtime.getRuntime().exec("su");
+            out = process.getOutputStream();
+            in = process.getInputStream();
+            out.write(cmd.getBytes());
+            byte[] bs = new byte[256];
+            Log.d("exeCommand", new String(bs, 0 ,in.read(bs)));
             process.waitFor();
+            Log.d("exeCommand", "waitFor");
+
         } catch (Exception e) {
             return false;
         } finally {
